@@ -39,7 +39,6 @@
                 height: 90vh;
                 margin-top: 5vh;
                 border-radius: 1.5rem;
-                /* "Rope" Border Effect */
                 border: 4px dashed #ca8a04; 
                 box-shadow: 0 0 0 8px #0f172a, 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             }
@@ -113,12 +112,10 @@
         }
         .dash-card {
             background: #1e293b;
-            /* Porthole Look */
-            border-radius: 50%;
+            border-radius: 50%; /* Porthole Look */
             aspect-ratio: 1;
             border: 4px solid #334155;
             box-shadow: inset 0 0 20px rgba(0,0,0,0.5), 0 4px 6px rgba(0,0,0,0.3);
-            
             padding: 10px;
             text-align: center;
             cursor: pointer;
@@ -228,7 +225,7 @@
             </div>
 
             <div class="p-4 text-center">
-                <p style="font-size: 12px; color: #94a3b8; letter-spacing: 2px; font-weight: 700;">CULINARY GUIDE v1.1</p>
+                <p style="font-size: 12px; color: #94a3b8; letter-spacing: 2px; font-weight: 700;">CULINARY GUIDE v1.4</p>
             </div>
 
             <div id="dash-grid" class="dash-grid">
@@ -254,7 +251,8 @@
             {
                 id: 'tech',
                 title: 'Techniques',
-                icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m2.3 16.4 7.6-6.6a1 1 0 0 0 .1-1.4l-.6-.7a1 1 0 0 0-1.4-.1L2.3 12a1 1 0 0 0 .1 4.4Z"/><path d="m13.7 13 3.6 3.2a2 2 0 0 0 2.7 0l1.7-1.6a2 2 0 0 0 0-2.8l-9-8.4a2 2 0 0 0-2.8 0l-1.6 1.7a2 2 0 0 0 0 2.8l3.6 3.5"/></svg>',
+                // UPDATED ICON: Single Clean Chef Knife
+                icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 10h5v5H2z" /><path d="M7 10h13c1 0 2 1 2 2 0 4-4 7-9 7H7v-9z" /></svg>',
                 items: [
                     { t: "Veggies (General): How to Cook Veggies", u: "https://www.youtube.com/watch?v=ZImcUEj1_9U" },
                     { t: "Veggies (JP): Cooking Vegetables 101", u: "https://www.youtube.com/watch?v=QjZ1LFqNWRM" },
@@ -285,7 +283,8 @@
             {
                 id: 'lunch',
                 title: 'Lunch',
-                icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 12h18"/></svg>',
+                // UPDATED ICON: Burger (Left) and Drink (Right) with clear separation
+                icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h8v-1c0-2-2-4-4-4s-4 2-4 4v1z"/><path d="M3 15h8v1c0 2-2 4-4 4s-4-2-4-4v-1z"/><line x1="3" y1="13" x2="11" y2="13"/><path d="M16 8h6v11a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2V8z"/><line x1="15" y1="8" x2="23" y2="8"/><path d="M19 8V4l2-2"/></svg>',
                 items: [
                     { t: "Shrimp Tacos", u: "https://natashaskitchen.com/shrimp-tacos/" },
                     { t: "The Best Taco Recipes", u: "https://natashaskitchen.com/best-taco-recipes/" },
