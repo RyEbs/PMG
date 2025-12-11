@@ -339,6 +339,14 @@
                     { t: "The best way to cook shrimp", u: "https://www.youtube.com/watch?v=HMEGseX9sX0" },
                     { t: "Better than Steak House at Home", u: "https://www.youtube.com/watch?v=LBWlPS0sTfA" }
                 ]
+            },
+            {
+                id: 'submit',
+                title: 'Submit Recipe',
+                icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>',
+                items: [
+                    { t: "Submit a New Recipe (Google Form)", u: "https://forms.gle/XfAxthF8xfLiG2MK6" }
+                ]
             }
         ];
 
@@ -378,7 +386,7 @@
                     <div class="recipe-meta">
                         ${item.u.includes('youtube') ? 
                         '<svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg> Video' : 
-                        '<svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> Recipe'}
+                        '<svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> Link'}
                     </div>
                 </a>
             `).join('');
