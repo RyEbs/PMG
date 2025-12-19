@@ -68,143 +68,224 @@
             overflow-y: auto;
         }
         
-        /* Header Area */
+        /* Header Area (Sky Scene) */
         .dash-header {
             position: relative;
-            background: #ffffff; /* White bg for logo */
-            padding: 24px 20px 40px 20px;
-            text-align: center;
+            background: linear-gradient(to bottom, #bae6fd, #f0f9ff); /* Sky Gradient */
+            height: 180px; /* Taller for the scene */
+            overflow: hidden;
             border-bottom: 4px solid #ca8a04;
+            cursor: pointer; 
+            user-select: none;
+            z-index: 1; 
         }
         
-        .logo-img {
-            max-width: 200px;
-            height: auto;
-            display: block;
-            margin: 0 auto;
+        .dash-header:active {
+            filter: brightness(0.95);
         }
 
-        /* SVG Wave */
-        .wave-container {
+        /* PMG Logo (Top Left) */
+        .logo-img {
             position: absolute;
-            bottom: -1px;
-            left: 0;
-            width: 100%;
-            overflow: hidden;
-            line-height: 0;
+            top: 20px;
+            left: 20px;
+            width: 150px; 
+            height: auto;
+            z-index: 10;
+            background: rgba(15, 23, 42, 0.9);
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 2px solid #ca8a04;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            pointer-events: none; 
         }
-        .wave-svg {
-            position: relative;
-            display: block;
-            width: calc(100% + 1.3px);
-            height: 32px;
+
+        /* Retro Sun (Top Right) */
+        .sun-graphic {
+            position: absolute;
+            top: -30px;
+            right: -30px;
+            width: 120px;
+            height: 120px;
+            background: #facc15;
+            border-radius: 50%;
+            box-shadow: 0 0 0 10px rgba(250, 204, 21, 0.3), 0 0 0 20px rgba(250, 204, 21, 0.1);
+            z-index: 1;
         }
-        .wave-shape {
-            fill: #0f172a; /* Matches dashboard bg */
+
+        /* Tug Boat (Center Right) */
+        .tug-container {
+            position: absolute;
+            bottom: 25px; 
+            right: 20px; 
+            width: 100px;
+            z-index: 5; 
+            animation: bob 3s ease-in-out infinite;
+            transform-origin: bottom center;
+            pointer-events: none;
         }
+
+        @keyframes bob {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-3px) rotate(1deg); }
+        }
+
+        /* --- THE BARGE --- */
+        .barge-container {
+            width: 180px; /* Extended width to hold the rope */
+            height: 50px;
+            position: absolute;
+            z-index: 4; 
+            transition: all 1s ease-in-out;
+            pointer-events: none;
+        }
+
+        /* State: Attached to Tug */
+        /* Tug is at bottom: 25px. We match that. */
+        /* Tug is at right: 20px (width 100). */
+        /* To connect, Barge needs to be positioned so the rope tip hits the tug tail */
+        .dash-header > .barge-container {
+            bottom: 25px; /* Same water level as Tug */
+            right: 110px; /* Positioned so rope connects to tug */
+            animation: bob 3.2s ease-in-out infinite; 
+        }
+
+        /* State: On the Dock */
+        /* Dock is at bottom: 25px. */
+        /* If we put barge inside dock at bottom: 0, it stays at 25px absolute */
+        .dock-container > .barge-container {
+            bottom: 0px; 
+            right: 20px;  
+            animation: none; 
+        }
+        
+        .dock-container > .barge-container .tow-rope {
+            opacity: 0;
+        }
+
+        /* --- THE DOCK --- */
+        .dock-container {
+            position: absolute;
+            bottom: 25px; /* Aligned with Tug Water Level */
+            right: -400px; 
+            width: 160px; 
+            height: 80px;
+            z-index: 4; 
+            transition: right 8s linear;
+            pointer-events: none;
+        }
+
+        /* --- PAUSE STATE --- */
+        body.is-paused .wave-back,
+        body.is-paused .wave-front,
+        body.is-paused .buoy-container,
+        body.is-paused .cloud,
+        body.is-paused .bird-container {
+            animation-play-state: paused !important;
+        }
+
+        /* --- BUOY --- */
+        .buoy-container {
+            position: absolute;
+            bottom: 5px; left: 100%; width: 40px; z-index: 3; 
+            animation: float-pass 90s linear infinite; pointer-events: none;
+        }
+        .buoy-light { fill: #facc15; animation: blink 2s infinite; }
+        @keyframes float-pass { 0% { transform: translateX(0) rotate(5deg); } 100% { transform: translateX(-140vw) rotate(-5deg); } }
+        @keyframes blink { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; filter: drop-shadow(0 0 8px #facc15); } }
+
+        /* --- CLOUDS --- */
+        .cloud-container {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none;
+        }
+        .cloud {
+            position: absolute; fill: #fff; opacity: 0.8; 
+            filter: drop-shadow(0 4px 6px rgba(255,255,255,0.4));
+            animation: cloud-drift linear infinite;
+        }
+        @keyframes cloud-drift { from { transform: translateX(100vw); } to { transform: translateX(-150px); } }
+        .c1 { top: 40px; width: 80px; animation-duration: 45s; }
+        .c2 { top: 70px; width: 60px; animation-duration: 60s; animation-delay: 15s; }
+        .c3 { top: 20px; width: 100px; animation-duration: 55s; animation-delay: 30s; }
+
+        /* --- BIRDS --- */
+        .bird-container {
+            position: absolute; top: 50px; left: -150px; width: 120px; z-index: 3;
+            animation: fly-pass 60s linear infinite; opacity: 0.9; color: #1e293b; pointer-events: none;
+        }
+        @keyframes fly-pass { 
+            0% { transform: translateX(0) translateY(0); } 
+            40% { transform: translateX(130vw) translateY(-20px); } 
+            100% { transform: translateX(130vw) translateY(-20px); }
+        }
+        .bird-wing { animation: flap 0.8s ease-in-out infinite alternate; transform-origin: center; }
+        @keyframes flap { 0% { transform: translateY(0) scaleY(1); } 100% { transform: translateY(-2px) scaleY(0.6); } }
+
+        /* --- WAVES --- */
+        .waves-wrapper {
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 40px;
+            overflow: hidden; z-index: 4; pointer-events: none;
+        }
+        .wave-track {
+            position: absolute; bottom: 0; left: 0; width: 200%; height: 100%;
+            display: flex; overflow: hidden;
+        }
+        .wave-svg { width: 50%; height: 100%; display: block; }
+        @keyframes wave-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .wave-back { z-index: 4; opacity: 0.6; bottom: 5px; animation: wave-scroll 12s linear infinite; color: #334155; }
+        .wave-front { z-index: 6; animation: wave-scroll 7s linear infinite; color: #0f172a; }
 
         /* Porthole Grid */
-        .dash-grid {
-            padding: 30px 20px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
+        .dash-grid { padding: 30px 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .dash-card {
-            background: #1e293b;
-            border-radius: 50%; /* Porthole Look */
-            aspect-ratio: 1;
+            background: #1e293b; border-radius: 50%; aspect-ratio: 1;
             border: 4px solid #334155;
             box-shadow: inset 0 0 20px rgba(0,0,0,0.5), 0 4px 6px rgba(0,0,0,0.3);
-            padding: 10px;
-            text-align: center;
-            cursor: pointer;
+            padding: 10px; text-align: center; cursor: pointer;
             transition: transform 0.1s, border-color 0.2s;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
         .dash-card:active { transform: scale(0.96); border-color: #ca8a04; }
         .dash-icon { width: 40px; height: 40px; margin-bottom: 8px; stroke: #facc15; }
         .dash-title { font-size: 13px; font-weight: 700; color: #e2e8f0; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* --- Section View --- */
+        /* Section View */
         #section-view { background: #0f172a; }
         .nav-bar {
-            height: 60px;
-            display: flex;
-            align-items: center;
-            padding: 0 16px;
-            background: #1e293b;
-            border-bottom: 2px solid #ca8a04;
-            flex-shrink: 0;
-            z-index: 10;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            height: 60px; display: flex; align-items: center; padding: 0 16px;
+            background: #1e293b; border-bottom: 2px solid #ca8a04;
+            flex-shrink: 0; z-index: 10; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
         .home-btn {
-            background: #0f172a;
-            border: 1px solid #334155;
-            color: #facc15;
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            cursor: pointer;
-            text-transform: uppercase;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            background: #0f172a; border: 1px solid #334155; color: #facc15;
+            padding: 8px 12px; border-radius: 8px; font-size: 12px; font-weight: bold;
+            display: flex; align-items: center; gap: 6px; cursor: pointer;
+            text-transform: uppercase; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
         .section-title {
-            flex: 1;
-            text-align: right;
-            font-weight: 700;
-            color: #facc15;
-            text-transform: uppercase;
-            font-size: 16px;
-            letter-spacing: 1px;
+            flex: 1; text-align: right; font-weight: 700; color: #facc15;
+            text-transform: uppercase; font-size: 16px; letter-spacing: 1px;
             text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
         .content-list {
-            flex: 1;
-            overflow-y: auto;
-            padding: 16px;
-            padding-bottom: 40px;
+            flex: 1; overflow-y: auto; padding: 16px; padding-bottom: 40px;
             background-image: linear-gradient(#1e293b 1px, transparent 1px);
-            background-size: 100% 40px; /* Notebook lines effect */
+            background-size: 100% 40px; 
         }
-        
-        /* --- List Items --- */
         .recipe-link {
-            display: block;
-            background: rgba(30, 41, 59, 0.9);
-            margin-bottom: 12px;
-            padding: 16px;
-            border-radius: 4px;
-            text-decoration: none;
-            border-left: 4px solid #ca8a04;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            transition: transform 0.1s;
+            display: block; background: rgba(30, 41, 59, 0.9);
+            margin-bottom: 12px; padding: 16px; border-radius: 4px;
+            text-decoration: none; border-left: 4px solid #ca8a04;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2); transition: transform 0.1s;
         }
         .recipe-link:active { transform: translateX(2px); background: #334155; }
         .recipe-title {
-            color: white;
-            font-weight: 600;
-            font-size: 15px;
-            margin-bottom: 4px;
-            display: flex;
-            justify-content: space-between;
+            color: white; font-weight: 600; font-size: 15px;
+            margin-bottom: 4px; display: flex; justify-content: space-between;
         }
         .recipe-meta {
-            color: #94a3b8;
-            font-size: 11px;
-            text-transform: uppercase;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-weight: 700;
+            color: #94a3b8; font-size: 11px; text-transform: uppercase;
+            display: flex; align-items: center; gap: 6px; font-weight: 700;
         }
         .icon-small { width: 14px; height: 14px; }
 
@@ -214,22 +295,104 @@
 
     <div id="app-container">
         <div id="dashboard-view" class="view">
-            <div class="dash-header">
+            <div id="scene-header" class="dash-header" onclick="callDock()">
+                
+                <div class="sun-graphic"></div>
                 <img src="https://www.pacificmaritimegroup.com/wp-content/uploads/2024/04/footer-logo.png" alt="Pacific Maritime Group" class="logo-img">
                 
-                <div class="wave-container">
-                    <svg class="wave-svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
-                        <path class="wave-shape" d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"></path>
+                <div class="cloud-container">
+                    <svg class="cloud c1" viewBox="0 0 24 24"><path d="M18.5 12A5.5 5.5 0 0 0 13 6.5c-.3 0-.6.03-.9.08A5 5 0 0 0 3 10c0 .3.05.6.14.9A4.5 4.5 0 0 0 3.5 19h15a5.5 5.5 0 0 0 0-11z"/></svg>
+                    <svg class="cloud c2" viewBox="0 0 24 24"><path d="M18.5 12A5.5 5.5 0 0 0 13 6.5c-.3 0-.6.03-.9.08A5 5 0 0 0 3 10c0 .3.05.6.14.9A4.5 4.5 0 0 0 3.5 19h15a5.5 5.5 0 0 0 0-11z"/></svg>
+                    <svg class="cloud c3" viewBox="0 0 24 24"><path d="M18.5 12A5.5 5.5 0 0 0 13 6.5c-.3 0-.6.03-.9.08A5 5 0 0 0 3 10c0 .3.05.6.14.9A4.5 4.5 0 0 0 3.5 19h15a5.5 5.5 0 0 0 0-11z"/></svg>
+                </div>
+
+                <div class="bird-container">
+                    <svg viewBox="0 0 120 50" fill="currentColor">
+                        <g class="bird-wing" style="transform-origin: 10px 15px;"><path d="M2 15 C 8 5 12 5 15 11 C 18 5 22 5 28 15 L 15 18 Z" /></g>
+                        <g class="bird-wing" style="transform: translate(30px, -10px) scale(0.85); transform-origin: 10px 15px;"><path d="M2 15 C 8 5 12 5 15 11 C 18 5 22 5 28 15 L 15 18 Z" /></g>
+                        <g class="bird-wing" style="transform: translate(50px, 5px) scale(0.9); transform-origin: 10px 15px;"><path d="M2 15 C 8 5 12 5 15 11 C 18 5 22 5 28 15 L 15 18 Z" /></g>
+                        <g class="bird-wing" style="transform: translate(75px, -5px) scale(0.75); transform-origin: 10px 15px;"><path d="M2 15 C 8 5 12 5 15 11 C 18 5 22 5 28 15 L 15 18 Z" /></g>
                     </svg>
+                </div>
+
+                <div id="the-barge" class="barge-container">
+                    <svg viewBox="0 0 180 60" fill="none">
+                        <path class="tow-rope" d="M105 25 Q 140 45 175 25" stroke="#fcd34d" stroke-width="2" fill="none" />
+                        
+                        <path d="M5 45 L10 25 H100 L105 45 H5 Z" fill="#374151" stroke="#111827" stroke-width="2"/>
+                        
+                        <rect x="15" y="10" width="25" height="15" fill="#9ca3af" stroke="#6b7280" stroke-width="1"/>
+                        <rect x="42" y="10" width="25" height="15" fill="#6b7280" stroke="#4b5563" stroke-width="1"/>
+                        <rect x="69" y="10" width="25" height="15" fill="#4b5563" stroke="#374151" stroke-width="1"/>
+                        
+                        <path d="M10 25 H100" stroke="#6b7280" stroke-width="2"/>
+                    </svg>
+                </div>
+
+                <div id="the-dock" class="dock-container">
+                    <svg viewBox="0 0 160 80" fill="none">
+                        <rect x="20" y="40" width="8" height="40" fill="#78350f" />
+                        <rect x="60" y="40" width="8" height="40" fill="#78350f" />
+                        <rect x="100" y="40" width="8" height="40" fill="#78350f" />
+                        <rect x="140" y="40" width="8" height="40" fill="#78350f" />
+                        <rect x="0" y="35" width="160" height="8" fill="#92400e" />
+                        <g transform="translate(10, 5)">
+                            <rect x="0" y="10" width="40" height="20" fill="#f1f5f9" stroke="#334155" stroke-width="2"/>
+                            <path d="M-5 10 L20 -5 L45 10 Z" fill="#475569" stroke="#1e293b" stroke-width="2"/>
+                            <rect x="22" y="15" width="10" height="15" fill="#94a3b8" />
+                            <rect x="5" y="15" width="10" height="10" fill="#bae6fd" stroke="#334155" stroke-width="1"/>
+                        </g>
+                        <rect x="120" y="28" width="6" height="8" fill="#1e293b" />
+                        <circle cx="123" cy="28" r="4" fill="#1e293b" />
+                    </svg>
+                </div>
+
+                <div class="buoy-container">
+                    <svg viewBox="0 0 40 60" fill="none">
+                        <path d="M5 45 Q20 55 35 45 L35 40 L5 40 Z" fill="#ef4444" />
+                        <rect x="5" y="36" width="30" height="4" fill="#facc15" />
+                        <path d="M10 36 L13 12" stroke="#ef4444" stroke-width="3" stroke-linecap="round" />
+                        <path d="M30 36 L27 12" stroke="#ef4444" stroke-width="3" stroke-linecap="round" />
+                        <line x1="11" y1="24" x2="29" y2="24" stroke="#ef4444" stroke-width="3" />
+                        <rect x="18" y="21" width="4" height="6" fill="#facc15" />
+                        <rect x="11" y="10" width="18" height="3" fill="#ef4444" />
+                        <circle cx="20" cy="8" r="5" class="buoy-light" />
+                    </svg>
+                </div>
+
+                <div class="tug-container">
+                    <svg viewBox="0 0 100 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M60 10c2-2 5-2 6 0s0 5 3 6" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+                        <rect x="55" y="20" width="10" height="15" fill="#334155"/>
+                        <rect x="55" y="22" width="10" height="4" fill="#facc15"/>
+                        <path d="M45 35h30v15H45z" fill="#cbd5e1"/>
+                        <rect x="50" y="38" width="8" height="6" fill="#0f172a" rx="1"/>
+                        <rect x="62" y="38" width="8" height="6" fill="#0f172a" rx="1"/>
+                        <path d="M10 45h80c5 0 8 5 5 12H15c-8 0-10-10-5-12z" fill="#dc2626"/>
+                        <path d="M10 45h80v4H10z" fill="#f8fafc"/>
+                        <circle cx="25" cy="50" r="3" fill="#1e293b"/>
+                        <circle cx="35" cy="50" r="3" fill="#1e293b"/>
+                        <circle cx="45" cy="50" r="3" fill="#1e293b"/>
+                    </svg>
+                </div>
+
+                <div class="waves-wrapper">
+                    <div class="wave-track wave-back">
+                        <svg class="wave-svg" viewBox="0 0 1200 60" preserveAspectRatio="none"><path d="M0,10 C150,60 350,-40 600,10 C850,60 1050,-40 1200,10 V60 H0 V10 Z" fill="currentColor"></path></svg>
+                        <svg class="wave-svg" viewBox="0 0 1200 60" preserveAspectRatio="none"><path d="M0,10 C150,60 350,-40 600,10 C850,60 1050,-40 1200,10 V60 H0 V10 Z" fill="currentColor"></path></svg>
+                    </div>
+                    <div class="wave-track wave-front">
+                        <svg class="wave-svg" viewBox="0 0 1200 60" preserveAspectRatio="none"><path d="M0,20 C150,70 400,-30 600,20 C800,70 1050,-30 1200,20 V60 H0 V20 Z" fill="currentColor"></path></svg>
+                        <svg class="wave-svg" viewBox="0 0 1200 60" preserveAspectRatio="none"><path d="M0,20 C150,70 400,-30 600,20 C800,70 1050,-30 1200,20 V60 H0 V20 Z" fill="currentColor"></path></svg>
+                    </div>
                 </div>
             </div>
 
             <div class="p-4 text-center">
-                <p style="font-size: 12px; color: #94a3b8; letter-spacing: 2px; font-weight: 700;">CULINARY GUIDE v1.4</p>
+                <p style="text-align:center; font-size: 12px; color: #94a3b8; letter-spacing: 2px; font-weight: 700; margin-top:10px;">CULINARY GUIDE v1.5</p>
             </div>
 
-            <div id="dash-grid" class="dash-grid">
-                </div>
+            <div id="dash-grid" class="dash-grid"></div>
         </div>
 
         <div id="section-view" class="view hidden">
@@ -240,8 +403,7 @@
                 </button>
                 <div id="current-section-title" class="section-title">Lunch</div>
             </div>
-            <div id="section-list" class="content-list">
-                </div>
+            <div id="section-list" class="content-list"></div>
         </div>
     </div>
 
@@ -251,7 +413,6 @@
             {
                 id: 'tech',
                 title: 'Techniques',
-                // UPDATED ICON: Single Clean Chef Knife
                 icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 10h5v5H2z" /><path d="M7 10h13c1 0 2 1 2 2 0 4-4 7-9 7H7v-9z" /></svg>',
                 items: [
                     { t: "Veggies (General): How to Cook Veggies", u: "https://www.youtube.com/watch?v=ZImcUEj1_9U" },
@@ -283,7 +444,6 @@
             {
                 id: 'lunch',
                 title: 'Lunch',
-                // UPDATED ICON: Burger (Left) and Drink (Right) with clear separation
                 icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h8v-1c0-2-2-4-4-4s-4 2-4 4v1z"/><path d="M3 15h8v1c0 2-2 4-4 4s-4-2-4-4v-1z"/><line x1="3" y1="13" x2="11" y2="13"/><path d="M16 8h6v11a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2V8z"/><line x1="15" y1="8" x2="23" y2="8"/><path d="M19 8V4l2-2"/></svg>',
                 items: [
                     { t: "Shrimp Tacos", u: "https://natashaskitchen.com/shrimp-tacos/" },
@@ -326,6 +486,17 @@
                 ]
             },
             {
+                id: 'dessert',
+                title: 'Dessert',
+                icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="16" cy="6" r="3"/><path d="M16 3v3"/><path d="M3 13L16 6l5 4v8l-18 3V13z"/><path d="M3 13l18-3"/><path d="M3 17l18-3"/></svg>',
+                items: [
+                    { t: "Chocolate Chip Cookies", u: "https://natashaskitchen.com/soft-chocolate-chip-cookies-recipe/" },
+                    { t: "Banana Bread", u: "https://natashaskitchen.com/banana-bread-recipe-video/" },
+                    { t: "Tiramisu", u: "https://natashaskitchen.com/tiramisu-recipe/" },
+                    { t: "Baklava", u: "https://natashaskitchen.com/baklava-recipe/" }
+                ]
+            },
+            {
                 id: 'extra',
                 title: 'Extra Credit',
                 icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
@@ -361,6 +532,73 @@
         let currentSectionIndex = 0;
         let isSectionOpen = false;
 
+        // --- DOCK & BARGE LOGIC ---
+        let isDockBusy = false;
+        let carryingBarge = true; // State tracker: Start carrying a barge
+        
+        function callDock() {
+            if (isDockBusy) return;
+            isDockBusy = true;
+
+            const dock = document.getElementById('the-dock');
+            const barge = document.getElementById('the-barge');
+            const header = document.getElementById('scene-header');
+            
+            // LOGIC SPLIT:
+            // 1. If carryingBarge = true -> We are dropping it off.
+            // 2. If carryingBarge = false -> We are picking one up.
+
+            // Pre-Setup for Pickup:
+            if (!carryingBarge) {
+                // If we don't have a barge, the dock must bring one.
+                // Attach barge to dock immediately (off-screen)
+                dock.appendChild(barge);
+            }
+
+            // Move Dock In
+            dock.style.transition = "right 8s linear";
+            dock.style.right = "20px"; // Stop position
+
+            // Wait for arrival (8s)
+            setTimeout(() => {
+                document.body.classList.add('is-paused');
+                
+                // PERFORM HANDOFF
+                if (carryingBarge) {
+                    // Drop Off: Move barge from Header to Dock
+                    dock.appendChild(barge);
+                    carryingBarge = false;
+                } else {
+                    // Pick Up: Move barge from Dock to Header
+                    header.appendChild(barge);
+                    carryingBarge = true;
+                }
+
+                // Wait at stop (5s)
+                setTimeout(() => {
+                    document.body.classList.remove('is-paused');
+                    
+                    // Move Dock Out
+                    dock.style.transition = "right 10s linear";
+                    dock.style.right = "100vw";
+
+                    // Reset when gone
+                    setTimeout(() => {
+                        dock.style.transition = "none";
+                        dock.style.right = "-400px";
+                        isDockBusy = false;
+                    }, 10000);
+
+                }, 5000);
+            }, 8000);
+        }
+
+        // Auto-call every 60s
+        setInterval(() => {
+            if(!document.hidden) callDock();
+        }, 60000);
+
+
         // Init Dashboard
         function initDashboard() {
             dashGrid.innerHTML = sections.map((sec, idx) => `
@@ -375,7 +613,6 @@
             currentSectionIndex = index;
             const sec = sections[index];
             
-            // Populate Content
             sectionTitle.innerText = sec.title;
             sectionList.innerHTML = sec.items.map(item => `
                 <a href="${item.u}" target="_blank" class="recipe-link">
@@ -391,10 +628,9 @@
                 </a>
             `).join('');
 
-            // Transition
             dashboardView.classList.add('hidden');
             sectionView.classList.remove('hidden');
-            sectionList.scrollTop = 0; // Reset scroll
+            sectionList.scrollTop = 0; 
             isSectionOpen = true;
         }
 
@@ -404,7 +640,7 @@
             isSectionOpen = false;
         }
 
-        // --- Swipe Logic (Section Navigation) ---
+        // Swipe Logic
         let touchStartX = 0;
         let touchStartY = 0;
         
@@ -421,31 +657,25 @@
             const deltaX = touchEndX - touchStartX;
             const deltaY = touchEndY - touchStartY;
             
-            // Ignore vertical scrolling
             if (Math.abs(deltaY) > Math.abs(deltaX)) return;
 
-            // Threshold for swipe
             if (Math.abs(deltaX) > 60) {
                 if (deltaX < 0) {
-                    // Swipe Left -> Next Section
                     if (currentSectionIndex < sections.length - 1) {
                         openSection(currentSectionIndex + 1);
                     }
                 } else {
-                    // Swipe Right -> Prev Section
                     if (currentSectionIndex > 0) {
                         openSection(currentSectionIndex - 1);
                     } else {
-                        goHome(); // Swipe right on first section goes home
+                        goHome(); 
                     }
                 }
             }
         }, {passive: true});
 
-        // Initialize App
         initDashboard();
 
     </script>
 </body>
 </html>
-
